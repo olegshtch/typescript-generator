@@ -11,7 +11,7 @@ import java.util.List;
 public class TsBeanModel extends TsDeclarationModel {
 
     private final boolean isClass;
-    private final List<TsType.GenericVariableType> typeParameters;
+    private final List<TsType.BoundedGenericVariableType> typeParameters;
     private final TsType parent;
     private final List<TsType> extendsList;
     private final List<TsType> implementsList;
@@ -28,7 +28,7 @@ public class TsBeanModel extends TsDeclarationModel {
             TsBeanCategory category,
             boolean isClass,
             Symbol name,
-            List<TsType.GenericVariableType> typeParameters,
+            List<TsType.BoundedGenericVariableType> typeParameters,
             TsType parent,
             List<TsType> extendsList,
             List<TsType> implementsList,
@@ -44,7 +44,7 @@ public class TsBeanModel extends TsDeclarationModel {
             TsBeanCategory category,
             boolean isClass,
             Symbol name,
-            List<TsType.GenericVariableType> typeParameters,
+            List<TsType.BoundedGenericVariableType> typeParameters,
             TsType parent,
             List<TsType> extendsList,
             List<TsType> implementsList,
@@ -75,7 +75,7 @@ public class TsBeanModel extends TsDeclarationModel {
         return isClass;
     }
 
-    public List<TsType.GenericVariableType> getTypeParameters() {
+    public List<TsType.BoundedGenericVariableType> getTypeParameters() {
         return typeParameters;
     }
 
