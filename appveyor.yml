@@ -15,6 +15,9 @@ build_script:
     mvn -version
     mvn --batch-mode versions:set "-DnewVersion=$($env:APPVEYOR_BUILD_VERSION)"; if ($LASTEXITCODE -ne 0) { throw "Build failed" }
     mvn --batch-mode -P attach-artifacts clean install -P local-deploy; if ($LASTEXITCODE -ne 0) { throw "Build failed" }
+    pushd gradle-ci
+    .\gradlew build --warning-mode all --debug --scan; if ($LASTEXITCODE -ne 0) { throw "Build failed" }
+    popd
     if ($env:APPVEYOR_REPO_BRANCH -eq "master" -and -not $env:APPVEYOR_PULL_REQUEST_NUMBER)
     {
        mvn --batch-mode site-deploy "-Dgithub.site.oauth2Token=$($env:access_token)"; if ($LASTEXITCODE -ne 0) { throw "Build failed" }
