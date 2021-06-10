@@ -3,6 +3,7 @@ package cz.habarta.typescript.generator.emitter;
 
 import cz.habarta.typescript.generator.TsType;
 import cz.habarta.typescript.generator.compiler.Symbol;
+import cz.habarta.typescript.generator.util.Pair;
 import cz.habarta.typescript.generator.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class TsBeanModel extends TsDeclarationModel {
     private final TsType parent;
     private final List<TsType> extendsList;
     private final List<TsType> implementsList;
-    private final List<Class<?>> taggedUnionClasses;
+    private final List<Pair<Class<?>, String>> taggedUnionClasses;
     private final String discriminantProperty;
     private final String discriminantLiteral;
     private final TsAliasModel taggedUnionAlias;
@@ -50,7 +51,7 @@ public class TsBeanModel extends TsDeclarationModel {
             TsType parent,
             List<TsType> extendsList,
             List<TsType> implementsList,
-            List<Class<?>> taggedUnionClasses,
+            List<Pair<Class<?>, String>> taggedUnionClasses,
             String discriminantProperty,
             String discriminantLiteral,
             TsAliasModel taggedUnionAlias,
@@ -109,7 +110,7 @@ public class TsBeanModel extends TsDeclarationModel {
         return parents;
     }
 
-    public List<Class<?>> getTaggedUnionClasses() {
+    public List<Pair<Class<?>, String>> getTaggedUnionClasses() {
         return taggedUnionClasses;
     }
 
@@ -121,7 +122,7 @@ public class TsBeanModel extends TsDeclarationModel {
         return discriminantLiteral;
     }
 
-    public TsBeanModel withTaggedUnion(List<Class<?>> taggedUnionClasses, String discriminantProperty, String discriminantLiteral) {
+    public TsBeanModel withTaggedUnion(List<Pair<Class<?>, String>> taggedUnionClasses, String discriminantProperty, String discriminantLiteral) {
         return new TsBeanModel(origin, category, isClass, decorators, name, typeParameters, parent, extendsList, implementsList, taggedUnionClasses, discriminantProperty, discriminantLiteral, taggedUnionAlias, properties, constructor, methods, comments);
     }
 

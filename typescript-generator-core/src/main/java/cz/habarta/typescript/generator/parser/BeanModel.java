@@ -1,6 +1,7 @@
 
 package cz.habarta.typescript.generator.parser;
 
+import cz.habarta.typescript.generator.util.Pair;
 import cz.habarta.typescript.generator.util.Utils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -11,13 +12,13 @@ import java.util.Objects;
 public class BeanModel extends DeclarationModel {
 
     private final Type parent;
-    private final List<Class<?>> taggedUnionClasses;
+    private final List<Pair<Class<?>, String>> taggedUnionClasses;
     private final String discriminantProperty;
     private final String discriminantLiteral;
     private final List<Type> interfaces;
     private final List<PropertyModel> properties;
 
-    public BeanModel(Class<?> origin, Type parent, List<Class<?>> taggedUnionClasses, String discriminantProperty, String discriminantLiteral, List<Type> interfaces, List<PropertyModel> properties, List<String> comments) {
+    public BeanModel(Class<?> origin, Type parent, List<Pair<Class<?>, String>> taggedUnionClasses, String discriminantProperty, String discriminantLiteral, List<Type> interfaces, List<PropertyModel> properties, List<String> comments) {
         super(origin, comments);
         this.parent = parent;
         this.taggedUnionClasses = taggedUnionClasses;
@@ -31,7 +32,7 @@ public class BeanModel extends DeclarationModel {
         return parent;
     }
 
-    public List<Class<?>> getTaggedUnionClasses() {
+    public List<Pair<Class<?>, String>> getTaggedUnionClasses() {
         return taggedUnionClasses;
     }
 

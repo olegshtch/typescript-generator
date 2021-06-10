@@ -1019,17 +1019,17 @@ public class ModelCompiler {
                 final Symbol unionName = symbolTable.getSymbol(bean.getOrigin(), "Union");
                 final boolean isGeneric = !bean.getTypeParameters().isEmpty();
                 final List<TsType> unionTypes = new ArrayList<>();
-                for (Class<?> cls : bean.getTaggedUnionClasses()) {
+                for (Pair<Class<?>, String> cls : bean.getTaggedUnionClasses()) {
                     final TsType type;
-                    if (isGeneric && cls.getTypeParameters().length != 0) {
-                        final List<String> mappedGenericVariables = GenericsResolver.mapGenericVariablesToBase(cls, bean.getOrigin());
+                    if (isGeneric && cls.getValue1().getTypeParameters().length != 0) {
+                        final List<String> mappedGenericVariables = GenericsResolver.mapGenericVariablesToBase(cls.getValue1(), bean.getOrigin());
                         type = new TsType.GenericReferenceType(
-                                symbolTable.getSymbol(cls),
+                                symbolTable.getSymbol(cls.getValue1()),
                                 mappedGenericVariables.stream()
                                         .map(TsType.GenericVariableType::new)
                                         .collect(Collectors.toList()));
                     } else {
-                        type = new TsType.ReferenceType(symbolTable.getSymbol(cls));
+                        type = new TsType.ReferenceType(symbolTable.getSymbol(cls.getValue1()));
                     }
                     unionTypes.add(type);
                 }

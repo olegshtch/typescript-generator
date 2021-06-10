@@ -332,13 +332,13 @@ public class Jackson2Parser extends ModelParser {
             }
         }
 
-        final List<Class<?>> taggedUnionClasses;
+        final List<Pair<Class<?>, String>> taggedUnionClasses;
         final JsonSubTypes jsonSubTypes = sourceClass.type.getAnnotation(JsonSubTypes.class);
         if (jsonSubTypes != null) {
             taggedUnionClasses = new ArrayList<>();
             for (JsonSubTypes.Type type : jsonSubTypes.value()) {
                 addBeanToQueue(new SourceType<>(type.value(), sourceClass.type, "<subClass>"));
-                taggedUnionClasses.add(type.value());
+                taggedUnionClasses.add(Pair.of(type.value(), type.name()));
             }
         } else {
             taggedUnionClasses = null;

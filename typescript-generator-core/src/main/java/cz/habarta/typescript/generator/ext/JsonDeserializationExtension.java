@@ -40,6 +40,7 @@ import cz.habarta.typescript.generator.emitter.TsSwitchStatement;
 import cz.habarta.typescript.generator.emitter.TsTypeReferenceExpression;
 import cz.habarta.typescript.generator.emitter.TsUnaryOperator;
 import cz.habarta.typescript.generator.emitter.TsVariableDeclarationStatement;
+import cz.habarta.typescript.generator.util.Pair;
 import cz.habarta.typescript.generator.util.Utils;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
@@ -318,13 +319,13 @@ public class JsonDeserializationExtension extends Extension {
 
     private static TsMethodModel createDeserializationMethodForTaggedUnion(SymbolTable symbolTable, TsModel tsModel, TsBeanModel bean) {
         final List<TsSwitchCaseClause> caseClauses = new ArrayList<>();
-        for (Class<?> cls : bean.getTaggedUnionClasses()) {
-            final TsBeanModel tuBean = tsModel.getBean(cls);
+        for (Pair<Class<?>, String> cls : bean.getTaggedUnionClasses()) {
+            final TsBeanModel tuBean = tsModel.getBean(cls.getValue1());
             caseClauses.add(new TsSwitchCaseClause(
                     new TsStringLiteral(tuBean.getDiscriminantLiteral()),
                     Arrays.<TsStatement>asList(new TsReturnStatement(
                             new TsCallExpression(
-                                    new TsMemberExpression(new TsTypeReferenceExpression(new TsType.ReferenceType(symbolTable.getSymbol(cls))), "fromData"),
+                                    new TsMemberExpression(new TsTypeReferenceExpression(new TsType.ReferenceType(symbolTable.getSymbol(cls.getValue1()))), "fromData"),
                                     new TsIdentifierReference("data")
                             )
                     ))
