@@ -1,6 +1,7 @@
 
 package cz.habarta.typescript.generator;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -689,4 +690,67 @@ public class TaggedUnionsTest {
         Assert.assertEquals(expected.trim(), output.trim());
     }
 
+    public static enum Tag {
+        TYPE_1,
+        TYPE_2,
+        TYPE_22
+    }
+    
+    @JsonTypeInfo (use = JsonTypeInfo.Id.NAME, visible = true, property = "tag",
+                   include = JsonTypeInfo.As.EXISTING_PROPERTY)
+    @JsonSubTypes ({
+        @JsonSubTypes.Type (value = TaggedType1.class, name = "TYPE_1"),
+        @JsonSubTypes.Type (value = TaggedType2.class, name = "TYPE_2"),
+        @JsonSubTypes.Type (value = TaggedType2.class, name = "TYPE_22"),
+                   })
+    public static abstract class AbstractTaggedClass {
+        private final Tag tag;
+        
+        @JsonCreator
+        protected AbstractTaggedClass(@JsonProperty (value = "tag", required = true) Tag tag) {
+            this.tag = tag;
+        }
+
+        public Tag getTag() {
+            return tag;
+        }
+    }
+    
+    public static class TaggedType1 extends AbstractTaggedClass {
+        public TaggedType1() {
+            super(Tag.TYPE_1);
+        }
+    }
+    
+    public static class TaggedType2 extends AbstractTaggedClass {
+        @JsonCreator
+        public TaggedType2(@JsonProperty (value = "tag", required = true) Tag tag) {
+            super(tag);
+        }
+    }
+    
+    @Test
+    public void testMutltiTaggedClass() {
+        final Settings settings = TestUtils.settings();
+        settings.quotes = "'";
+        final String output = new TypeScriptGenerator(settings).generateTypeScript(Input.from(AbstractTaggedClass.class));
+        final String expected = ""
+                + "interface AbstractTaggedClass {\n"
+                + "    tag: 'TYPE_1' | 'TYPE_2';\n"
+                + "}\n"
+                + "\n"
+                + "interface TaggedType1 extends AbstractTaggedClass {\n"
+                + "    tag: 'TYPE_1';\n"
+                + "}\n"
+                + "\n"
+                + "interface TaggedType2 extends AbstractTaggedClass {\n"
+                + "    tag: 'TYPE_2';\n"
+                + "}\n"
+                + "\n"
+                + "type Tag = 'TYPE_1' | 'TYPE_2' | 'TYPE_22';\n"
+                + "\n"
+                + "type AbstractTaggedClassUnion = TaggedType1 | TaggedType2;"
+                + "";
+        Assert.assertEquals(expected.trim(), output.trim());
+    }
 }
